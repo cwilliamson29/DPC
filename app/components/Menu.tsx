@@ -9,7 +9,7 @@ function Menu() {
                     return (
                         <a href={"/" + item.link} key={i}>
                             <li key={i} className="py-5 pl-3 border-b-1 border-gray-700 hover:bg-gray-500">
-                                <a href={"/" + item.link}>{item.title}</a>
+                                {item.title}
                             </li>
                         </a>
                     )

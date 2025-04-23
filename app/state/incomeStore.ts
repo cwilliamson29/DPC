@@ -1,29 +1,68 @@
 import createSelectors from "~/state/selectors";
 import {create} from "zustand/react";
 
-interface Income {
+class IncomeBase {
+    id: number;
     name: string;
-    amount: number;
+    pretax: boolean
+    payCycleAmountPre: number;
+    payCycleAmountPost: number;
     frequency: string
+    startDate: string;
+
+    constructor(id: number, name: string, pretax: boolean, payCycleAmountPre: number, payCycleAmountPost: number, frequency: string, startDate: string) {
+        this.id = id;
+        this.name = name;
+        this.pretax = pretax;
+        this.payCycleAmountPre = payCycleAmountPre;
+        this.payCycleAmountPost = payCycleAmountPost;
+        this.frequency = frequency;
+        this.startDate = startDate;
+    }
+
+    yearlyAmount(): number {
+        return this.payCycleAmountPre * 26
+    }
 }
 
-const initialIncome: Income = {
-    name: "test",
-    amount: 10000,
-    frequency: "weekly",
+const initialIncome = new IncomeBase(
+    0,
+    "My Income",
+    true,
+    1532.38,
+    1282.12,
+    "Bi-Weekly",
+    ""
+)
+
+interface TaxAmount {
+    pre: number;
+    post: number;
+
+    amount(): number;
+}
+
+const taxAmount: TaxAmount = {
+    pre: 1532.38,
+    post: 1282.12,
+    amount: () => {
+        return 100 - ((taxAmount.post / taxAmount.pre) * 100)
+    },
 }
 
 type IncomeStore = {
-    TotalIncome: Income [];
-    setTotalIncome: (totalIncome: Income) => void;
+    totalIncome: IncomeBase [];
+    taxPercent: TaxAmount;
+    setTotalIncome: (totalIncome: IncomeBase) => void;
 }
 const incomeStore = create<IncomeStore>((set) => ({
-    TotalIncome: [initialIncome],
-    setTotalIncome: (income: Income) => {
-        if (incomeStore.getState().TotalIncome[0].name === "") {
-            set(() => ({TotalIncome: [income]}));
+    totalIncome: [initialIncome],
+    taxPercent: taxAmount,
+    setTotalIncome: (income: IncomeBase) => {
+        if (incomeStore.getState().totalIncome[0].name === "") {
+            set(() => ({totalIncome: [income]}));
         } else {
-            set((state: any) => ({TotalIncome: {...state.TotalIncome, income}}));
+            set((state: any) => ({totalIncome: {...state.totalIncome, income}}));
         }
 
     }
