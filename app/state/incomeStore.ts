@@ -1,5 +1,6 @@
 import createSelectors from "~/state/selectors";
 import {create} from "zustand/react";
+import {dummyIncome} from "~/data/dummyData/dummyIncome";
 
 class IncomeBase {
     id: number;
@@ -25,16 +26,6 @@ class IncomeBase {
     }
 }
 
-const initialIncome = new IncomeBase(
-    0,
-    "My Income",
-    true,
-    1532.38,
-    1282.12,
-    "Bi-Weekly",
-    ""
-)
-
 interface TaxAmount {
     pre: number;
     post: number;
@@ -53,11 +44,24 @@ const taxAmount: TaxAmount = {
 type IncomeStore = {
     totalIncome: IncomeBase [];
     taxPercent: TaxAmount;
+    getIncome: () => void;
     setTotalIncome: (totalIncome: IncomeBase) => void;
 }
 const incomeStore = create<IncomeStore>((set) => ({
-    totalIncome: [initialIncome],
+    totalIncome: [],
     taxPercent: taxAmount,
+    getIncome: () => {
+        const data = dummyIncome
+
+        const result: IncomeBase[] = []
+        data.map((m) => {
+            const v = new IncomeBase(m.id, m.name, m.pretax, m.payCycleAmountPre, m.payCycleAmountPost, m.frequency, m.startDate);
+            result.push(v)
+        })
+
+        set(() => ({totalIncome: result}))
+
+    },
     setTotalIncome: (income: IncomeBase) => {
         if (incomeStore.getState().totalIncome[0].name === "") {
             set(() => ({totalIncome: [income]}));

@@ -1,8 +1,14 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useIncomeStore} from "~/state/incomeStore";
 import Card from "~/components/tailwindcss/Card";
 
 function Income() {
+    const getIncome = useIncomeStore.use.getIncome()
+
+    useEffect(() => {
+        getIncome()
+    }, []);
+
     const income = useIncomeStore.use.totalIncome()
 
     const formatDollar = (amount: number): string => {
