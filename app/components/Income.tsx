@@ -16,14 +16,17 @@ function Income() {
     }
 
     return (
-        <div>
-            {income.map((item, i) => (
-                <Card key={i} title={item.name}>
-                    <div>Yearly amount: {formatDollar(item.yearlyAmount())}</div>
-                    <div>{item.frequency} amount: {formatDollar(item.payCycleAmountPost)}</div>
-                </Card>
+        <div className="flex flex-row w-[100%] justify-center mt-5">
+            <div className="">
+                {income.map((item, i) => (
+                    <Card key={i} title={item.name}>
+                        <div>Yearly amount: {formatDollar(item.yearlyAmount())}</div>
+                        <div>{item.frequency} amount: {formatDollar(item.payCycleAmountPost)}</div>
+                    </Card>
 
-            ))}
+                ))}
+            </div>
+
         </div>
     )
 }
