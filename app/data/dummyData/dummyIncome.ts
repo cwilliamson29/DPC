@@ -10,10 +10,10 @@ export interface Income {
 
 export const dummyIncome: Income[] = [{
     id: 0,
-    name: "My Income",
+    name: "Wal-Mart",
     pretax: true,
     payCycleAmountPre: 1532.38,
     payCycleAmountPost: 1282.12,
     frequency: "Bi-Weekly",
-    startDate: ""
+    startDate: "4/24/2025"
 }]
