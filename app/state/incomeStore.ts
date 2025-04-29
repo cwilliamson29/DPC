@@ -62,11 +62,12 @@ const incomeStore = create<IncomeStore>((set) => ({
         set(() => ({totalIncome: result}))
 
     },
-    setTotalIncome: (income: IncomeBase) => {
+    setTotalIncome: (m: any) => {
         if (incomeStore.getState().totalIncome[0].name === "") {
-            set(() => ({totalIncome: [income]}));
+            set(() => ({totalIncome: [m]}));
         } else {
-            set((state: any) => ({totalIncome: {...state.totalIncome, income}}));
+            const v = new IncomeBase(Number(m.id), m.name, m.pretax, Number(m.payCycleAmountPre), Number(m.payCycleAmountPost), m.frequency, m.startDate);
+            set((state: any) => ({totalIncome: {...state.totalIncome, v}}));
         }
 
     }

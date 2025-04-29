@@ -1,9 +1,8 @@
 export interface Income {
-    id: number;
+    id?: number;
     name: string;
-    pretax: boolean;
-    payCycleAmountPre: number;
-    payCycleAmountPost: number;
+    payCycleAmountPre?: number;
+    payCycleAmountPost?: number;
     frequency: string;
     startDate: string;
 }
@@ -11,7 +10,6 @@ export interface Income {
 export const dummyIncome: Income[] = [{
     id: 0,
     name: "Wal-Mart",
-    pretax: true,
     payCycleAmountPre: 1532.38,
     payCycleAmountPost: 1282.12,
     frequency: "Bi-Weekly",
