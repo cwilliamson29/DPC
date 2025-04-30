@@ -8,8 +8,7 @@ export const db = new Dexie("DebtDatabase") as Dexie & {
 // Schema declaration:
 db.version(1).stores({
     income:
-        "++id, name, payCycleAmountPre, payCycleAmountPost, frequency, startDate"
-
+        "++id, name, payCycleAmountPre, payCycleAmountPost, frequency, startDate",
 });
 
 

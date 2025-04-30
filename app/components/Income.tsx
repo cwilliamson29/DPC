@@ -16,7 +16,7 @@ function Income() {
         payCycleAmountPre: undefined,
         payCycleAmountPost: undefined,
         frequency: "",
-        startDate: "4/24/2025"
+        startDate: ""
     })
 
     useEffect(() => {
@@ -41,7 +41,7 @@ function Income() {
 
     return (
         <div className="flex flex-col md:w-[85%] m-5 ">
-            <button onClick={() => console.log(dataMonthlyIncome)}>consollog</button>
+            <button onClick={() => console.log(amount)}>consollog</button>
             <div className="flex justify-center mb-5">
                 {dataMonthlyIncome.length > 1 && (
                     <div className="rounded-md overflow-hidden w-[50%]">
@@ -112,6 +112,9 @@ function Income() {
                                      setter={(val) => setAmount({...amount, payCycleAmountPost: Number(val)})}/>
                             <SelectBox name={"Pay Frequency: "} arr={["Weekly", "Bi-Weekly", "Monthly"]} error={false} value={amount.frequency}
                                        setter={(val) => setAmount({...amount, frequency: val})}/>
+                            <Textbox name={"Last Pay Date: "} type={"date"} placeHolder={""} value={amount.startDate} keyValue={""}
+                                     setter={(val) => setAmount({...amount, startDate: val})}/>
+
                             <button type="submit" className="bg-green-900 text-white rounded-xl p-3 px-10 hover:bg-green-800 cursor-pointer">Add Income
                             </button>
                         </form>

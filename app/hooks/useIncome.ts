@@ -7,6 +7,7 @@ const useIncome = (deps?: boolean) => {
     const [error, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
+    const inn = "income"
     useEffect(() => {
         setLoading(true)
 
@@ -27,6 +28,7 @@ const useIncome = (deps?: boolean) => {
 export default useIncome;
 
 export const addIncome = (val: Income) => {
-    db.income.add(val)
-        .catch(err => console.log(err))
+    const inc = "income";
+    db[inc].add(val)
+        .catch((err: Error) => console.log(err.message))
 }
