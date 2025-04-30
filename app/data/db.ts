@@ -1,5 +1,5 @@
 import Dexie, {type EntityTable} from "dexie";
-import type {Income} from "~/data/dummyData/dummyIncome";
+import type {Income} from "~/data/interfaces";
 
 export const db = new Dexie("DebtDatabase") as Dexie & {
     income: EntityTable<Income, "id">;

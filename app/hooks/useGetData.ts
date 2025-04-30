@@ -1,22 +1,22 @@
 import {useEffect, useState} from "react";
-import {type Income} from "~/data/dummyData/dummyIncome";
+import {type Income} from "~/data/interfaces";
 import {db} from "~/data/db";
 
-const useIncome = (deps?: boolean) => {
+const useGetData = (dbStore: string, deps?: boolean) => {
     const [data, setData] = useState<Income []>([])
     const [error, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const inn = "income"
     useEffect(() => {
         setLoading(true)
 
-        db.income.toArray()
-            .then(res => {
+        // @ts-ignore
+        db[dbStore].toArray()
+            .then((res: any) => {
                 setData(res)
                 setLoading(false)
             })
-            .catch(err => {
+            .catch((err: any) => {
                 setError(err)
                 setLoading(false)
             })
@@ -25,10 +25,10 @@ const useIncome = (deps?: boolean) => {
 
     return {data, error, loading}
 }
-export default useIncome;
+export default useGetData;
 
-export const addIncome = (val: Income) => {
-    const inc = "income";
-    db[inc].add(val)
-        .catch((err: Error) => console.log(err.message))
-}
+// export const addIncome = (val: Income) => {
+//     const inc = "income";
+//     db[inc].add(val)
+//         .catch((err: Error) => console.log(err.message))
+// }

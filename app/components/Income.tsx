@@ -1,14 +1,17 @@
 import React, {useEffect, useState} from 'react'
 import Card from "~/components/tailwindcss/Card";
 import Textbox from "~/components/tailwindcss/Textbox";
-import useIncome, {addIncome} from "~/hooks/useIncome";
-import type {Income} from "~/data/dummyData/dummyIncome";
+import useGetData from "~/hooks/useGetData";
+import type {Income} from "~/data/interfaces";
 import {Chart} from "react-google-charts";
 import SelectBox from "~/components/tailwindcss/SelectBox";
+import useSaveData from "~/hooks/useSaveData";
+import {formatDollar, getAllTotalIncome, getSingletotalIncome} from "~/helpers/incomeHelpers";
 
 function Income() {
     const [editing, setEditing] = useState<boolean>(false);
-    const {data, loading, error} = useIncome(editing);
+    const {data, loading, error} = useGetData("income", editing);
+    const {yearly, monthly} = getAllTotalIncome(data)
     const [dataMonthlyIncome, setDataMonthlyIncome] = useState([]);
     // input state
     const [amount, setAmount] = useState<Income>({
@@ -31,10 +34,6 @@ function Income() {
         setDataMonthlyIncome(result)
     }, [editing, data]);
 
-    const formatDollar = (amount: number): string => {
-        return Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(amount);
-    }
-
     if (loading) {
         return <div className="text-white">Loading...</div>;
     }
@@ -44,8 +43,19 @@ function Income() {
             <button onClick={() => console.log(amount)}>consollog</button>
             <div className="flex justify-center mb-5">
                 {dataMonthlyIncome.length > 1 && (
-                    <div className="rounded-md overflow-hidden w-[50%]">
+                    <div className="rounded-md overflow-hidden w-[50%] bg-white">
                         <Chart chartType={"PieChart"} data={dataMonthlyIncome} options={{title: "Income from all sources"}} width={"100%"}/>
+                        <div className="text-black text-center">
+                            <label className="text-lg font-bold">Income From All Sources:</label>
+                            <div className="flex justify-around">
+                                <div className="font-bold text-green-800">
+                                    Montly After Tax: {formatDollar(monthly)}
+                                </div>
+                                <div className="font-bold text-green-800">
+                                    Yearly Before Tax: {formatDollar(yearly)}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
 
@@ -53,12 +63,7 @@ function Income() {
 
             <div className="grid grid-cols-2 gap-4 place-items-center mb-5">
                 {data.map((item, i) => {
-
-                    const totalWeeks = item.frequency === "Weekly" ? 52 : item.frequency === "Bi-Weekly" ? 26 : item.frequency === "Monthly" ? 12 : 1
-                    // @ts-ignore
-                    const year = item.payCycleAmountPost * 26
-                    // @ts-ignore
-                    const withheld = (item.payCycleAmountPre - item.payCycleAmountPost) * totalWeeks
+                    const {year, withheld} = getSingletotalIncome(item)
 
                     return (
                         <Card key={i} title={item.name} colorOptions={{title: "bg-green-700", body: "bg-green-100", text: "text-black"}}>
@@ -96,7 +101,7 @@ function Income() {
                         <form className="flex flex-col w-[100%] items-center"
                               onSubmit={(e) => {
                                   e.preventDefault();
-                                  addIncome(amount)
+                                  useSaveData(amount, "income")
                                   setEditing(!editing)
                               }}>
                             <Textbox name={"Name: "} type={"text"} placeHolder={"My Income"} value={amount.name}

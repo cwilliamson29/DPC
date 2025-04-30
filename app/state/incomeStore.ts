@@ -1,6 +1,6 @@
 import createSelectors from "~/state/selectors";
 import {create} from "zustand/react";
-import {dummyIncome} from "~/data/dummyData/dummyIncome";
+import {interfaces} from "~/data/interfaces";
 
 class IncomeBase {
     id: number;
@@ -51,7 +51,7 @@ const incomeStore = create<IncomeStore>((set) => ({
     totalIncome: [],
     taxPercent: taxAmount,
     getIncome: () => {
-        const data = dummyIncome
+        const data = interfaces
 
         const result: IncomeBase[] = []
         data.map((m) => {
