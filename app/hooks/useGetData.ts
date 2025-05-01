@@ -26,9 +26,3 @@ const useGetData = (dbStore: string, deps?: boolean) => {
     return {data, error, loading}
 }
 export default useGetData;
-
-// export const addIncome = (val: Income) => {
-//     const inc = "income";
-//     db[inc].add(val)
-//         .catch((err: Error) => console.log(err.message))
-// }
