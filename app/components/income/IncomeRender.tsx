@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {formatDollar, getSingletotalIncome} from "~/helpers/incomeHelpers";
 import Card from "~/components/tailwindcss/Card";
 import type {Income} from "~/data/interfaces";
@@ -9,13 +9,22 @@ interface Props {
 }
 
 function IncomeRender({data, error}: Props) {
+    const [edit, setEdit] = useState(false);
     return (
         <div className="grid grid-cols-2 gap-4 place-items-center mb-5">
             {data.map((item, i) => {
                 const {year, withheld} = getSingletotalIncome(item)
-
+                const colorOptions = {
+                    title: "bg-green-700",
+                    body: "bg-green-100",
+                    text: "text-black",
+                }
+                const options = {
+                    setEdit: () => setEdit(!edit),
+                    edit: edit,
+                }
                 return (
-                    <Card key={i} title={item.name} colorOptions={{title: "bg-green-700", body: "bg-green-100", text: "text-black"}}>
+                    <Card key={i} title={item.name} colorOptions={colorOptions}>
                         <div className="w-full">
                             <div className="">
                                 <div className=" flex w-full">
