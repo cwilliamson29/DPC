@@ -16,8 +16,12 @@ function Income() {
         <div className="flex flex-col md:w-[85%] m-5 ">
             <ChartRender data={data}/>
 
-            <IncomeRender data={data} error={error}/>
-
+            <div className="grid grid-cols-2 gap-4 place-items-center mb-5">
+                {data.map((item, i) => (
+                    <IncomeRender key={i} data={item} error={error}/>
+                ))}
+            </div>
+            
             <AddFormRender setEditing={() => setEditing(!editing)}/>
         </div>
     )

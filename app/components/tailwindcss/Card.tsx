@@ -1,4 +1,6 @@
 import React from 'react'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faFloppyDisk, faPenToSquare, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 interface ColorOptions {
     title: string | "bg-gray-500";
@@ -7,8 +9,9 @@ interface ColorOptions {
 }
 
 interface Options {
-    setEditing?: () => void;
-    edit: boolean | false
+    setEditing: () => void;
+    edit: boolean | false;
+    showEdit: boolean;
 }
 
 interface Props {
@@ -31,19 +34,37 @@ function Card({title, width, colorOptions, options, children}: Props) {
         color = colorOptions
     }
     const boxWidth = width ? width : "md:w-lg"
-
+    const determineOptions = () => {
+        if (options) {
+            return options.showEdit;
+        } else {
+            return false
+        }
+    }
+    const titleCSS = () => {
+        const base = "w-[100%] overflow-hidden text-center p-1 text-lg font-bold flex "
+        if (options?.showEdit) {
+            return base + " justify-between " + color.title
+        } else {
+            return base + " justify-center " + color.title
+        }
+    }
     return (
         <div className={boxWidth + " flex flex-col items-center justify-center border-1 border-gray-500 rounded-md shadow-lg overflow-hidden "}>
-            <div className={"w-[100%] overflow-hidden text-center p-1 text-lg font-bold " + color.title}>
-                <div>
-                    {/*<FaEdit/>*/}
-                </div>
+            <div className={titleCSS()}>
+                {determineOptions() &&
+                    <div onClick={() => options?.setEditing()}>
+                        {options?.edit ? <FontAwesomeIcon icon={faFloppyDisk}/> : <FontAwesomeIcon icon={faPenToSquare}/>}
+                    </div>
+                }
                 <div>
                     {title}
                 </div>
-                <div>
-                    {/*<MdDeleteForever/>*/}
-                </div>
+                {determineOptions() &&
+                    <div>
+                        <FontAwesomeIcon icon={faTrash}/>
+                    </div>
+                }
             </div>
             <div className={"w-[100%] p-1 flex " + color.body + " " + color.text}>
                 {children}
