@@ -3,9 +3,10 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFloppyDisk, faPenToSquare, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 interface ColorOptions {
-    title: string | "bg-gray-500";
-    body: string | "bg-gray-300";
-    text: string | "text-black";
+    title: string;
+    body: string;
+    text: string;
+    border: string;
 }
 
 interface Options {
@@ -29,10 +30,12 @@ function Card({title, width, colorOptions, options, children}: Props) {
             title: "bg-gray-500",
             body: "bg-gray-300",
             text: "text-black",
+            border: "border-gray-500",
         }
     } else {
         color = colorOptions
     }
+    const borderColor = options?.edit ? "border-red-700" : color.border
     const boxWidth = width ? width : "md:w-lg"
     const determineOptions = () => {
         if (options) {
@@ -42,7 +45,7 @@ function Card({title, width, colorOptions, options, children}: Props) {
         }
     }
     const titleCSS = () => {
-        const base = "w-[100%] overflow-hidden text-center p-1 text-lg font-bold flex "
+        const base = "w-[100%] overflow-hidden text-center p-1 text-lg font-bold flex  "
         if (options?.showEdit) {
             return base + " justify-between " + color.title
         } else {
@@ -50,7 +53,7 @@ function Card({title, width, colorOptions, options, children}: Props) {
         }
     }
     return (
-        <div className={boxWidth + " flex flex-col items-center justify-center border-1 border-gray-500 rounded-md shadow-lg overflow-hidden "}>
+        <div className={boxWidth + " flex flex-col items-center justify-center border-3 rounded-md shadow-lg overflow-hidden " + borderColor + " " + color.title}>
             <div className={titleCSS()}>
                 {determineOptions() &&
                     <div onClick={() => options?.setEditing()}>
@@ -70,6 +73,7 @@ function Card({title, width, colorOptions, options, children}: Props) {
                 {children}
             </div>
         </div>
+
     )
 }
 

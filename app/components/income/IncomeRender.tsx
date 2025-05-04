@@ -15,6 +15,7 @@ function IncomeRender({data, error}: Props) {
         title: "bg-green-700",
         body: "bg-green-100",
         text: "text-black",
+        border: "border-green-700"
     }
     const options = {
         setEditing: () => setEdit(!edit),

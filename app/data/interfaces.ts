@@ -6,3 +6,11 @@ export interface Income {
     frequency: string;
     startDate: string;
 }
+
+export interface IncomeErrors {
+    name: boolean,
+    payCycleAmountPre: boolean,
+    payCycleAmountPost: boolean,
+    frequency: boolean,
+    startDate: boolean,
+}
