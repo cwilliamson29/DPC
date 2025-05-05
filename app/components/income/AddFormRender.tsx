@@ -4,6 +4,7 @@ import Textbox from "~/components/tailwindcss/Textbox";
 import SelectBox from "~/components/tailwindcss/SelectBox";
 import type {Income, IncomeErrors} from "~/data/interfaces";
 import {addIncomeValidator} from "~/helpers/incomeHelpers";
+import useSaveData from "~/hooks/useSaveData";
 
 interface Props {
     setEditing: () => void;
@@ -27,9 +28,15 @@ function AddFormRender({setEditing}: Props) {
     const handleSubmit = (e: any) => {
         e.preventDefault();
         addIncomeValidator(amount, (val: IncomeErrors) => setErrors(val))
-        console.log("done")
-        // useSaveData(amount, "income")
-        // setEditing()
+        useSaveData(amount, "income")
+        setEditing()
+        setAmount({
+            name: "",
+            payCycleAmountPre: undefined,
+            payCycleAmountPost: undefined,
+            frequency: "",
+            startDate: ""
+        })
     }
 
     return (
