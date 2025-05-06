@@ -1,66 +1,50 @@
-import React, {useState} from 'react'
-import {formatDollar, getSingletotalIncome} from "~/helpers/incomeHelpers";
+import React, {useEffect, useState} from 'react'
 import Card from "~/components/tailwindcss/Card";
 import type {Income} from "~/data/interfaces";
 import useModifyData from "~/hooks/useModifyData";
 import EditIncome from "~/components/income/EditIncome";
+import SingleIncomeRender from "~/components/income/SingleIncomeRender";
+import {useIncomeStore} from "~/state/incomeStore";
 
 interface Props {
     data: Income;
     error: Error | null;
 }
 
-function IncomeRender({data, error}: Props) {
-    const [edit, setEdit] = useState(false);
-    const {year, withheld} = getSingletotalIncome(data)
+function IncomeRender() {
+    const currentIncome = useIncomeStore.getState().currentIncome
+
     const colorOptions = {
         title: "bg-green-700",
         body: "bg-green-100",
         text: "text-black",
         border: "border-green-700"
     }
-    const options = {
-        id: data.id !== undefined ? data.id : 0,
-        setEditing: () => setEdit(!edit),
-        setDelete: (id: number) => useModifyData(id, "income", "delete"),
-        edit: edit,
-        showEdit: true,
-    }
-    const NoEditData = () => {
-        return (
-            <div className="w-full">
-                <div className="">
-                    <div className=" flex w-full">
-                        <div className="w-[40%] text-right">Pre-tax Yearly:</div>
-                        <div className="w-[60%] pl-3 text-green-900">{formatDollar(year)}</div>
-                    </div>
-                    <div className=" flex w-full">
-                        <div className="text-sm text-right w-[40%]">Amount withheld:</div>
-                        <div className=" w-[40%] pl-3 text-red-600">{formatDollar(withheld)}</div>
-                    </div>
-                    <div className=" flex w-full">
-                        <div className="text-lg font-bold w-[40%] text-right">Yearly Amount:</div>
-                        <div className="text-lg font-bold w-[60%] pl-3 text-green-900">{formatDollar(year - withheld)}</div>
-                    </div>
-                </div>
-                <div>
-                    <div className=" flex w-full">
-                        <div className="text-lg font-bold w-[40%] text-right">{data.frequency} Amount:</div>
-                        <div className="text-lg font-bold w-[60%] pl-3 text-green-900">{data.payCycleAmountPost && formatDollar(data.payCycleAmountPost)}</div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
 
+    useEffect(() => {
+        console.log("inside income render")
+    }, [])
 
     return (
-        <div>
-            <Card title={data.name} colorOptions={colorOptions} options={options}>
-                {edit ? <EditIncome data={data}/> : <NoEditData/>}
-            </Card>
-            {error && <div className="bg-red-500 text-black">{error.message}</div>}
+        <div className="grid grid-cols-2 gap-4 place-items-center mb-5">
+            {currentIncome!.map((item, i) => {
+                const [edit, setEdit] = useState(false);
+
+                const options = {
+                    id: item.id!,
+                    setEditing: () => setEdit(!edit),
+                    setDelete: (id: number) => useModifyData(id, "income", "delete"),
+                    edit: edit,
+                    showEdit: true,
+                }
+                return (
+                    <Card key={item.id} title={item.name} colorOptions={colorOptions} options={options}>
+                        {edit ? <EditIncome id={item.id!} setEditing={() => setEdit(!edit)}/> : <SingleIncomeRender id={item.id!} edit={edit}/>}
+                    </Card>
+                )
+            })}
         </div>
+
     )
 }
 

@@ -2,13 +2,19 @@ import React, {useState} from 'react'
 import Textbox from "~/components/tailwindcss/Textbox";
 import SelectBox from "~/components/tailwindcss/SelectBox";
 import type {Income, IncomeErrors} from '~/data/interfaces';
+import useModifyData from "~/hooks/useModifyData";
+import {useIncomeStore} from "~/state/incomeStore";
 
 interface Props {
-    data: Income;
+    id: number;
+    setEditing: () => void;
 }
 
-function EditIncome({data}: Props) {
-    const [amount, setAmount] = useState<Income>(data);
+function EditIncome({id, setEditing}: Props) {
+    const setRenderIncome = useIncomeStore.getState().setRenderIncome;
+    const income = useIncomeStore.getState().getIncomeById(id)
+    const updateById = useIncomeStore.getState().updateById
+    const [amount, setAmount] = useState<Income>(income);
     const [errors, setErrors] = useState<IncomeErrors>({
         name: false,
         payCycleAmountPre: false,
@@ -17,14 +23,21 @@ function EditIncome({data}: Props) {
         startDate: false,
     });
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: any) => {
         e.preventDefault();
-        console.log()
+        if (amount.id) {
+            useModifyData(amount.id, "income", "update", amount)
+            //setRenderIncome()
+            updateById(amount.id, amount)
+            setEditing()
+        }
+
+        console.log("sent")
     }
 
     return (
         <form className="flex flex-col w-[100%] items-center"
-              onSubmit={(e) => console.log("editting")}>
+              onSubmit={(e) => handleSubmit(e)}>
             <Textbox name={"Name: "} type={"text"} placeHolder={"My Income"} value={amount.name}
                      keyValue={""} error={errors.name}
                      setter={(val) => setAmount({...amount, name: val})}/>
@@ -42,7 +55,7 @@ function EditIncome({data}: Props) {
                      keyValue={""} error={errors.frequency}
                      setter={(val) => setAmount({...amount, startDate: val})}/>
 
-            <button type="submit" className="bg-green-900 text-white rounded-xl p-3 px-10 hover:bg-green-800 cursor-pointer">Add Income
+            <button type="submit" className="bg-green-900 text-white rounded-xl p-3 px-10 hover:bg-green-800 cursor-pointer">Save
             </button>
         </form>
     )
