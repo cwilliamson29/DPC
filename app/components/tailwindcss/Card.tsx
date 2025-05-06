@@ -10,6 +10,7 @@ interface ColorOptions {
 }
 
 interface Options {
+    id: number;
     setEditing: () => void;
     setDelete: (id: number) => void;
     edit: boolean | false;
@@ -17,7 +18,6 @@ interface Options {
 }
 
 interface Props {
-    id: number;
     title: string;
     width?: string;
     colorOptions?: ColorOptions;
@@ -25,7 +25,7 @@ interface Props {
     children: any;
 }
 
-function Card({id, title, width, colorOptions, options, children}: Props) {
+function Card({title, width, colorOptions, options, children}: Props) {
     let color: ColorOptions
     if (!colorOptions) {
         color = {
@@ -67,7 +67,7 @@ function Card({id, title, width, colorOptions, options, children}: Props) {
                 </div>
                 {determineOptions() &&
                     <div>
-                        <FontAwesomeIcon icon={faTrash} onClick={() => options?.setDelete(id)}/>
+                        <FontAwesomeIcon icon={faTrash} onClick={() => options?.setDelete(options?.id)}/>
                     </div>
                 }
             </div>
