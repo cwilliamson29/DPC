@@ -8,13 +8,14 @@ interface Props {
 }
 
 function SingleIncomeRender({id, edit}: Props) {
-    const renderIncome = useIncomeStore.getState().renderIncome
-    const [data, setData] = useState(useIncomeStore.getState().getIncomeById(id))
+    const getIncomeByIdState = useIncomeStore.use.getIncomeById()
+
+    const [data, setData] = useState(getIncomeByIdState(id))
     const {year, withheld} = getSingletotalIncome(data)
 
     useEffect(() => {
-        setData(useIncomeStore.getState().getIncomeById(id))
-        console.log("in singleincome render")
+        setData(getIncomeByIdState(id))
+        //console.log("in singleincome render")
     }, [edit])
 
     return (

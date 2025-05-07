@@ -5,12 +5,11 @@ import SelectBox from "~/components/tailwindcss/SelectBox";
 import type {Income, IncomeErrors} from "~/data/interfaces";
 import {addIncomeValidator} from "~/helpers/incomeHelpers";
 import useSaveData from "~/hooks/useSaveData";
+import {useIncomeStore} from "~/state/incomeStore";
 
-interface Props {
-    setEditing: () => void;
-}
-
-function AddFormRender({setEditing}: Props) {
+function AddFormRender() {
+    const setRenderIncome = useIncomeStore.use.setRenderIncome()
+    const addIncomeToState = useIncomeStore.use.addIncome()
     const [errors, setErrors] = useState<IncomeErrors>({
         name: false,
         payCycleAmountPre: false,
@@ -27,16 +26,23 @@ function AddFormRender({setEditing}: Props) {
     })
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        addIncomeValidator(amount, (val: IncomeErrors) => setErrors(val))
-        useSaveData(amount, "income")
-        setEditing()
-        setAmount({
-            name: "",
-            payCycleAmountPre: undefined,
-            payCycleAmountPost: undefined,
-            frequency: "",
-            startDate: ""
-        })
+        setRenderIncome()
+
+        const {isError, result} = addIncomeValidator(amount)
+        setErrors(result)
+
+        if (!isError) {
+            useSaveData(amount, "income")
+            addIncomeToState(amount)
+            setAmount({
+                name: "",
+                payCycleAmountPre: undefined,
+                payCycleAmountPost: undefined,
+                frequency: "",
+                startDate: ""
+            })
+        }
+        setRenderIncome()
     }
 
     return (

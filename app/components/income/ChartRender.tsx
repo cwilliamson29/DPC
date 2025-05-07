@@ -1,31 +1,34 @@
 import React, {useEffect, useState} from 'react'
 import {Chart} from "react-google-charts";
 import {formatDollar, getAllTotalIncome} from "~/helpers/incomeHelpers";
-import type {Income} from "~/data/interfaces";
+import {useIncomeStore} from "~/state/incomeStore";
 
-interface Props {
-    data: Income[];
-}
+function ChartRender() {
+    const currentIncome = useIncomeStore.use.currentIncome()
 
-function ChartRender({data}: Props) {
     const [dataMonthlyIncome, setDataMonthlyIncome] = useState([]);
-    const {yearly, monthly} = getAllTotalIncome(data)
+
 
     useEffect(() => {
         let result: any = []
-        data.map((item) => {
-            if (item.name && item.payCycleAmountPre) {
-                const val = [item.name, item.payCycleAmountPre]
-                result.push(val)
-            }
-        })
-        result.unshift(["Task", "Monthly Income"])
-        setDataMonthlyIncome(result)
-    }, [data]);
+
+        if (currentIncome.length > 0) {
+            currentIncome.map((item) => {
+                if (item.name && item.payCycleAmountPre) {
+                    const val = [item.name, item.payCycleAmountPre]
+                    result.push(val)
+                }
+            })
+            result.unshift(["Task", "Monthly Income"])
+            setDataMonthlyIncome(result)
+        }
+    }, []);
+
+    const {yearly, monthly} = getAllTotalIncome()
 
     return (
         <div className="flex justify-center mb-5">
-            {dataMonthlyIncome.length > 1 && (
+            {dataMonthlyIncome.length > 0 && (
                 <div className="rounded-md overflow-hidden w-[50%] bg-white">
                     <Chart chartType={"PieChart"} data={dataMonthlyIncome} options={{title: "Income from all sources"}} width={"100%"}/>
                     <div className="text-black text-center">

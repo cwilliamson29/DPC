@@ -1,18 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import Card from "~/components/tailwindcss/Card";
-import type {Income} from "~/data/interfaces";
 import useModifyData from "~/hooks/useModifyData";
 import EditIncome from "~/components/income/EditIncome";
 import SingleIncomeRender from "~/components/income/SingleIncomeRender";
 import {useIncomeStore} from "~/state/incomeStore";
 
-interface Props {
-    data: Income;
-    error: Error | null;
-}
-
 function IncomeRender() {
-    const currentIncome = useIncomeStore.getState().currentIncome
+    const currentIncome = useIncomeStore.use.currentIncome()
+    const renderIncome = useIncomeStore.use.renderIncome()
+    // const {currentIncome} = useIncomeStore((state) => ({currentIncome: state.currentIncome}))
+    const removeIncomeFromState = useIncomeStore.use.removeIncome()
 
     const colorOptions = {
         title: "bg-green-700",
@@ -21,19 +18,31 @@ function IncomeRender() {
         border: "border-green-700"
     }
 
-    useEffect(() => {
-        console.log("inside income render")
-    }, [])
+    const deleteData = (id: number) => {
+        useModifyData(id, "income", "delete")
+        removeIncomeFromState(id)
+    }
 
+    // useEffect(() => {
+    //     //console.log("inside income render")
+    // }, [renderIncome])
+
+    //console.log(currentIncome)
+
+    if (renderIncome) {
+        return (
+            <div>Loading....</div>
+        )
+    }
     return (
         <div className="grid grid-cols-2 gap-4 place-items-center mb-5">
-            {currentIncome!.map((item, i) => {
+            {currentIncome.map((item, i) => {
                 const [edit, setEdit] = useState(false);
 
                 const options = {
                     id: item.id!,
                     setEditing: () => setEdit(!edit),
-                    setDelete: (id: number) => useModifyData(id, "income", "delete"),
+                    setDelete: (id: number) => deleteData(id),
                     edit: edit,
                     showEdit: true,
                 }

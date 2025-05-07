@@ -1,11 +1,15 @@
 import {useEffect, useState} from "react";
 import {type Income} from "~/data/interfaces";
 import {db} from "~/data/db";
+import {useIncomeStore} from "~/state/incomeStore";
 
 const useGetData = (dbStore: string, deps?: boolean) => {
     const [data, setData] = useState<Income []>([])
     const [error, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+
+    const setCurrent = useIncomeStore.use.setCurrentIncome()
+
 
     useEffect(() => {
         setLoading(true)
@@ -14,6 +18,7 @@ const useGetData = (dbStore: string, deps?: boolean) => {
         db[dbStore].toArray()
             .then((res: any) => {
                 setData(res)
+                setCurrent(res)
                 setLoading(false)
             })
             .catch((err: any) => {

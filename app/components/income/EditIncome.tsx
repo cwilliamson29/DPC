@@ -11,9 +11,12 @@ interface Props {
 }
 
 function EditIncome({id, setEditing}: Props) {
-    const setRenderIncome = useIncomeStore.getState().setRenderIncome;
-    const income = useIncomeStore.getState().getIncomeById(id)
-    const updateById = useIncomeStore.getState().updateById
+    const setRenderIncome = useIncomeStore.use.setRenderIncome();
+
+    const getIncomeByIdState = useIncomeStore.use.getIncomeById()
+    const income = getIncomeByIdState(id)
+
+    const updateById = useIncomeStore.use.updateById()
     const [amount, setAmount] = useState<Income>(income);
     const [errors, setErrors] = useState<IncomeErrors>({
         name: false,
