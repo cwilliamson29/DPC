@@ -4,12 +4,13 @@ import Textbox from "~/components/tailwindcss/Textbox";
 import SelectBox from "~/components/tailwindcss/SelectBox";
 import type {Income, IncomeErrors} from "~/data/interfaces";
 import {addIncomeValidator} from "~/helpers/incomeHelpers";
-import useSaveData from "~/hooks/useSaveData";
 import {useIncomeStore} from "~/state/incomeStore";
+import useSaveData from "~/hooks/useSaveData";
 
 function AddFormRender() {
     const setRenderIncome = useIncomeStore.use.setRenderIncome()
     const addIncomeToState = useIncomeStore.use.addIncome()
+    const [id, setId] = useState<number>()
     const [errors, setErrors] = useState<IncomeErrors>({
         name: false,
         payCycleAmountPre: false,
@@ -26,14 +27,12 @@ function AddFormRender() {
     })
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        setRenderIncome()
 
         const {isError, result} = addIncomeValidator(amount)
         setErrors(result)
 
         if (!isError) {
-            useSaveData(amount, "income")
-            addIncomeToState(amount)
+            useSaveData(amount, "income", (amount: Income) => addIncomeToState(amount))
             setAmount({
                 name: "",
                 payCycleAmountPre: undefined,
@@ -42,7 +41,6 @@ function AddFormRender() {
                 startDate: ""
             })
         }
-        setRenderIncome()
     }
 
     return (

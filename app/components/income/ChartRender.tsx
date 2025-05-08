@@ -22,7 +22,7 @@ function ChartRender() {
             result.unshift(["Task", "Monthly Income"])
             setDataMonthlyIncome(result)
         }
-    }, []);
+    }, [currentIncome]);
 
     const {yearly, monthly} = getAllTotalIncome()
 

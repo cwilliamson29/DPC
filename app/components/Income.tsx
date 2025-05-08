@@ -3,6 +3,7 @@ import useGetData from "~/hooks/useGetData";
 import IncomeRender from "~/components/income/IncomeRender";
 import AddFormRender from "~/components/income/AddFormRender";
 import {useIncomeStore} from "~/state/incomeStore";
+import ChartRender from "~/components/income/ChartRender";
 
 function Income() {
     const incomeRender = useIncomeStore.use.renderIncome()
@@ -16,7 +17,7 @@ function Income() {
 
     return (
         <div className="flex flex-col md:w-[85%] m-5 ">
-            {/*<ChartRender/>*/}
+            <ChartRender/>
 
             <IncomeRender/>
 
